@@ -88,6 +88,12 @@ total_encounters = len(state.cleaned_df)
 unique_patients = state.quality_summary.unique_patients
 outcome = state.outcome_summary
 
+unique_patients_display = (
+    f"{unique_patients:,}"
+    if unique_patients is not None
+    else "N/A"
+)
+
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     st.markdown(
@@ -103,7 +109,7 @@ with col2:
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-value">{unique_patients:, if unique_patients else 'N/A'}</div>
+            <div class="metric-value">{unique_patients_display}</div>
             <div class="metric-label">Unique Patients</div>
         </div>
         """,

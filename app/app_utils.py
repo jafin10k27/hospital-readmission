@@ -103,3 +103,13 @@ def get_pipeline_state(force_reload: bool = False) -> PipelineState:
             state = pipeline.run(nrows=nrows, patient_dedup_strategy=dedup)
             st.session_state["pipeline_state"] = state
     return st.session_state["pipeline_state"]
+
+
+def format_count(value: int | float | None, fallback: str = "N/A") -> str:
+    """Safely formats an integer count with comma separators or returns fallback."""
+    if value is not None and str(value).lower() not in ("none", "nan", "<na>"):
+        try:
+            return f"{int(value):,}"
+        except (ValueError, TypeError):
+            return fallback
+    return fallback
