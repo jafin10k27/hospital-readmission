@@ -1,0 +1,57 @@
+app:
+  name: "Hospital Readmission Intelligence Platform"
+  version: "1.0.0"
+  description: "Healthcare data quality assessment, 30-day readmission analytics, SQL exploration, and reporting"
+  random_seed: 42
+  environment: "development"
+
+paths:
+  raw_data_default: "data/raw/diabetic_data.csv"
+  ids_mapping_default: "data/raw/IDS_mapping.csv"
+  processed_data: "data/processed/cleaned_encounters.csv"
+  database: "data/processed/hospital_readmission.db"
+  reports_dir: "reports/generated"
+  logs_dir: "logs"
+
+ingestion:
+  supported_extensions: [".csv", ".txt"]
+  default_encoding: "utf-8"
+  fallback_encodings: ["latin-1", "iso-8859-1", "cp1252"]
+  max_rows_preview: 50000
+
+cleaning:
+  standardize_column_names: false  # Preserve original column names unless explicitly requested
+  treat_question_mark_as_na: true
+  sentinel_values: ["?", "None", "Unknown/Invalid", "Not Available", "Not Mapped"]
+  high_missing_threshold: 0.50     # Columns with >50% missing flagged for potential removal/special handling
+  columns_to_drop_if_sparse: ["weight", "payer_code", "medical_specialty"]
+  drop_exact_duplicates: true
+  patient_deduplication: "keep_first" # "keep_first", "keep_all", or "none" (distinguish patient vs encounter)
+  icd9_grouping_enabled: true
+
+outcome:
+  raw_column: "readmitted"
+  target_column: "readmitted_30d"
+  positive_values: ["<30"]
+  negative_values: [">30", "NO"]
+  description: "Binary 30-day readmission outcome (1 = readmitted <30 days, 0 = >30 days or NO)"
+
+database:
+  db_type: "sqlite"
+  table_encounters: "encounters"
+  table_cleaning_log: "cleaning_log"
+  table_validation_log: "validation_log"
+  table_quality_summary: "data_quality_summary"
+  indexes:
+    - ["encounter_id"]
+    - ["patient_nbr"]
+    - ["readmitted_30d"]
+    - ["admission_type_id"]
+    - ["discharge_disposition_id"]
+    - ["age"]
+
+statistical:
+  confidence_level: 0.95
+  alpha: 0.05
+  multiple_testing_method: "fdr_bh" # Benjamini-Hochberg False Discovery Rate
+  min_cell_count: 5               # Minimum expected cell count for chi-squared test validity

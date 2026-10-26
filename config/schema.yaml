@@ -1,0 +1,88 @@
+# Schema definitions for Hospital Encounter Datasets
+default_dataset: "uci_diabetes"
+
+schemas:
+  uci_diabetes:
+    name: "Diabetes 130-US Hospitals (1999-2008)"
+    source: "UCI Machine Learning Repository / Strack et al."
+    encounter_id: "encounter_id"
+    patient_id: "patient_nbr"
+    outcome_column: "readmitted"
+    
+    numerical_columns:
+      - time_in_hospital
+      - num_lab_procedures
+      - num_procedures
+      - num_medications
+      - number_outpatient
+      - number_emergency
+      - number_inpatient
+      - number_diagnoses
+
+    numerical_ranges:
+      time_in_hospital: [1, 14]
+      num_lab_procedures: [1, 150]
+      num_procedures: [0, 10]
+      num_medications: [1, 100]
+      number_outpatient: [0, 100]
+      number_emergency: [0, 100]
+      number_inpatient: [0, 100]
+      number_diagnoses: [1, 20]
+
+    categorical_columns:
+      - race
+      - gender
+      - age
+      - weight
+      - admission_type_id
+      - discharge_disposition_id
+      - admission_source_id
+      - payer_code
+      - medical_specialty
+      - max_glu_serum
+      - A1Cresult
+      - metformin
+      - repaglinide
+      - nateglinide
+      - chlorpropamide
+      - glimepiride
+      - acetohexamide
+      - glipizide
+      - glyburide
+      - tolbutamide
+      - pioglitazone
+      - rosiglitazone
+      - acarbose
+      - miglitol
+      - troglitazone
+      - tolazamide
+      - examide
+      - citoglipton
+      - insulin
+      - glyburide-metformin
+      - glipizide-metformin
+      - glimepiride-pioglitazone
+      - metformin-rosiglitazone
+      - metformin-pioglitazone
+      - change
+      - diabetesMed
+      - readmitted
+
+    diagnosis_columns:
+      - diag_1
+      - diag_2
+      - diag_3
+
+    valid_gender_values: ["Female", "Male", "Unknown/Invalid"]
+    
+    # ICD-9 High-level category groupings (based on standard CCS / clinical clusters)
+    icd9_categories:
+      Circulatory: [390, 459, 785]
+      Respiratory: [460, 519, 786]
+      Digestive: [520, 579, 787]
+      Diabetes: [250]
+      Injury_Poisoning: [800, 999]
+      Musculoskeletal: [710, 739]
+      Genitourinary: [580, 629, 788]
+      Neoplasms: [140, 239]
+      Other: []
